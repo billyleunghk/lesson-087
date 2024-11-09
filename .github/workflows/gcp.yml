@@ -42,5 +42,5 @@ jobs:
           with:
             push: true
             tags: |
-               ${{ env.GAR_LOCATION }}/${{ env.IMAGE_NAME }}:${{ env.GIT_TAB }}
-               ${{ env.GAR_LOCATION }}/${{ env.IMAGE_NAME }}:latest
+               ${{ env.IMAGE_NAME }}:${{ env.GIT_TAB }}
+               ${{ env.IMAGE_NAME }}:latest
