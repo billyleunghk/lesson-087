@@ -9,7 +9,8 @@ env:
     PROJECT_ID: eks-202411-441114
     GAR_LOCATION: us-west2-docker.pkg.dev/eks-202411-441114/images/
     GIT_TAB: v0.1.0
-
+    WORKING_DIR: billyleunghk
+    DOCKER_LOC: lesson-087
 jobs:
     build-push-gcr:
         name: Build and Push to GCP
@@ -31,10 +32,9 @@ jobs:
             gcloud auth configure-docker us-west2-docker.pkg.dev  --quiet
         
         - name: Build Docker Image
-          run: docker build -t $IMAGE_NAME:latest .
+          run: docker build . --file ${{ env.DOCKER_LOC }} --tag ${{ env.GAR_LOCATION }}
+          working-directory: ${{ env.WORKING_DIR }}
 
         - name: Push Docker Image to Artifact Registry
           run: |
-            docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/$IMAGE_NAME:latest
-            docker tag $IMAGE_NAME:latest us-west2-docker.pkg.dev/$PROJECT_ID/$IMAGE_NAME:$GIT_TAG
             docker push ${{ env.GAR_LOCATION }}
