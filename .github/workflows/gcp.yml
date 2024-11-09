@@ -24,16 +24,13 @@ jobs:
           with:
             credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
 
-        - name: "Setup Cloud SDK"
-          uses: 'google-github-actions/setup-gcloud@v1'
-
         - name: Configure Docker Auth
           run: |
             gcloud auth configure-docker us-west2-docker.pkg.dev  --quiet
         
         - name: Build Docker Image
-          run: docker build . --tag ${{ env.GAR_LOCATION }}
+          run: docker build -t $IMAGE_NAME:latest .
 
         - name: Push Docker Image to Artifact Registry
           run: |
-            docker push ${{ env.GAR_LOCATION }}
+            docker push $GAR_LOCATION
