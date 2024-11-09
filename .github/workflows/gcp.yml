@@ -7,7 +7,7 @@ on:
 env:
     IMAGE_NAME: lesson-087
     PROJECT_ID: eks-202411-441114
-    GAR_LOCATION: us-west2-docker.pkg.dev/eks-202411-441114/images/
+    GAR_LOCATION: us-west2-docker.pkg.dev/eks-202411-441114/images
     GIT_TAB: v0.1.0
     WORKING_DIR: billyleunghk
     DOCKER_LOC: lesson-087
@@ -50,5 +50,5 @@ jobs:
           with:
             push: true
             tags: |
-               ${{ env.IMAGE_NAME }}:${{ env.GIT_TAB }}
-               ${{ env.IMAGE_NAME }}:latest
+               ${{ env.GAR_LOCATION }}/${{ env.IMAGE_NAME }}:${{ env.GIT_TAB }}
+               ${{ env.GAR_LOCATION }}/${{ env.IMAGE_NAME }}:latest
