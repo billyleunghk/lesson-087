@@ -11,6 +11,8 @@ env:
     GIT_TAB: v0.1.0
     WORKING_DIR: billyleunghk
     DOCKER_LOC: lesson-087
+    WORKLOAD_PROVIDER_ID: projects/786081891380/locations/global/workloadIdentityPools/githubactions-pool/providers/wkld-provider
+    SERVICE_ACCOUNT_ID: githubactions-wkid@eks-202411-441114.iam.gserviceaccount.com
 jobs:
     build-push-gcr:
         name: Build and Push to GCP
@@ -27,11 +29,17 @@ jobs:
         - id: 'auth'
           uses: 'google-github-actions/auth@v2'
           with:
-            credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
+            token_format: access_token
+            workload_identity_provider: ${{ env.WORKLOAD_PROVIDER_ID }}
+            service_account: ${{ env.SERVICE_ACCOUNT_ID }}
+            access_token_lifetime: 300s
 
-        - name: Configure Docker Auth
-          run: |
-            gcloud auth configure-docker us-west2-docker.pkg.dev  --quiet
+        - name: Login to Artifact Registry
+          uses: docker/login-action@v1
+          with:
+            registry: us-west2-docker.pkg.dev
+            username: oauth2accesstoken
+            password: ${{ steps.auth.outputs.access_token }}
         
         - name: Build Docker Image
           run: docker build -t ${{ env.IMAGE_NAME }}:latest .
