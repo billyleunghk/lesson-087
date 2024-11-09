@@ -8,7 +8,6 @@ env:
     IMAGE_NAME: lesson-087
     PROJECT_ID: eks-202411-441114
     GAR_LOCATION: us-west2-docker.pkg.dev/eks-202411-441114/images
-    GIT_TAB: v0.1.0
     WORKING_DIR: billyleunghk
     DOCKER_LOC: lesson-087
     WORKLOAD_PROVIDER_ID: projects/786081891380/locations/global/workloadIdentityPools/githubactions-pool/providers/wkld-provider
@@ -44,8 +43,15 @@ jobs:
         - name: Build Docker Image
           run: docker build -t ${{ env.IMAGE_NAME }}:latest .
 
+        - name: Automatic Tagging of Releases
+          id: increment-git-tag
+          run: |
+              bash ./scripts/git_update.sh -v patch
+
         - id: docker-push-tagged
           name: Tag Docker image and push to Google Artifact Registry
+          env:
+            GIT_TAB: ${{ steps.increment-git-tag.outputs.git-tag }}
           uses: docker/build-push-action@v6
           with:
             push: true
