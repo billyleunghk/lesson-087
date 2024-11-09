@@ -46,7 +46,7 @@ jobs:
         - name: Automatic Tagging of Releases
           id: increment-git-tag
           run: |
-              bash ./scripts/git_update.sh -v patch
+              bash ./scripts/git_update.sh -v major
 
         - id: docker-push-tagged
           name: Tag Docker image and push to Google Artifact Registry
